@@ -66,7 +66,7 @@ const ResetPassword = () => {
                             <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Email Address</label>
                             <input
                                 type="email"
-                                className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium"
+                                className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium text-gray-900"
                                 placeholder="Confirm your email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -79,7 +79,7 @@ const ResetPassword = () => {
                         <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">OTP Code</label>
                         <input
                             type="text"
-                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium tracking-widest text-center text-lg"
+                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium tracking-widest text-center text-lg text-gray-900"
                             placeholder="123456"
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
@@ -92,7 +92,7 @@ const ResetPassword = () => {
                         <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">New Password</label>
                         <input
                             type="password"
-                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium"
+                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium text-gray-900"
                             placeholder="••••••••"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
@@ -104,7 +104,7 @@ const ResetPassword = () => {
                         <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Confirm Password</label>
                         <input
                             type="password"
-                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium"
+                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium text-gray-900"
                             placeholder="••••••••"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
