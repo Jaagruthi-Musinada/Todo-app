@@ -19,7 +19,9 @@ const Signup = () => {
             setStep('verify');
         } catch (err) {
             console.error("Signup error details:", err);
-            setError(err.response?.data?.message || err.response?.data?.error || 'Signup failed');
+            const errorMsg = err.response?.data?.message ||
+                (typeof err.response?.data?.error === 'string' ? err.response?.data?.error : 'Signup failed');
+            setError(errorMsg);
         }
     };
 
