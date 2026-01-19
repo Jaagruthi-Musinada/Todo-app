@@ -1,97 +1,129 @@
-import { Trash2, Edit, Check } from 'lucide-react';
+import { Edit2, Trash2, Calendar, Clock, CheckCircle, Circle, AlertCircle } from 'lucide-react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+const cn = (...inputs) => twMerge(clsx(inputs));
 
 const TaskCard = ({ task, onEdit, onDelete, onToggleComplete }) => {
-    const isExpired = task.deadline && new Date(task.deadline) < new Date();
 
-    // Status Logic
-    const isCompleted = task.completed;
+    // Calculate Status
+    const getStatus = () => {
+        if (task.completed) return { label: 'Completed', color: 'green', priority: 'low' };
+        if (!task.deadline) return { label: 'No Deadline', color: 'gray', priority: 'neutral' };
 
-    // Color Schemes
-    const cardStyles = isCompleted
-        ? "bg-emerald-50/50 border-emerald-100 opacity-75"
-        : "bg-white border-white shadow-xl shadow-fuchsia-900/5 hover:-translate-y-1";
+        const now = new Date();
+        const deadline = new Date(task.deadline);
+        const diffTime = deadline - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffTime < 0) return { label: 'Overdue', color: 'red', priority: 'high' };
+        if (diffDays <= 1) return { label: 'Due Today', color: 'orange', priority: 'medium' };
+        return { label: 'Scheduled', color: 'brand', priority: 'low' };
+    };
+
+    const status = getStatus();
+
+    // specific styles based on color key
+    const styles = {
+        red: "bg-red-50 hover:border-red-300 dark:bg-red-900/10 dark:hover:border-red-900/50 border-red-100 dark:border-red-900/20",
+        orange: "bg-orange-50 hover:border-orange-300 dark:bg-orange-900/10 dark:hover:border-orange-900/50 border-orange-100 dark:border-orange-900/20",
+        green: "bg-green-50 hover:border-green-300 dark:bg-green-900/10 dark:hover:border-green-900/50 border-green-100 dark:border-green-900/20",
+        brand: "bg-white hover:border-brand-300 dark:bg-dark-card dark:hover:border-brand-500/30 border-gray-100 dark:border-white/5", // Default distinct style
+        gray: "bg-gray-50 hover:border-gray-300 dark:bg-white/5 dark:hover:border-white/10 border-gray-100 dark:border-white/5"
+    };
+
+    const badgeStyles = {
+        red: "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300 border-red-200 dark:border-red-500/30",
+        orange: "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300 border-orange-200 dark:border-orange-500/30",
+        green: "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300 border-green-200 dark:border-green-500/30",
+        brand: "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-300 border-brand-200 dark:border-brand-500/30",
+        gray: "bg-gray-100 text-gray-700 dark:bg-gray-700/50 dark:text-gray-300 border-gray-200 dark:border-gray-600"
+    };
+
+    // Format Date: dd/mm/yyyy
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB'); // en-GB uses dd/mm/yyyy
+    };
 
     return (
-        <div className={`p-6 rounded-3xl transition-all duration-300 border ${cardStyles} group relative overflow-hidden flex flex-col`}>
-            {/* Status Indicator Stripe */}
-            <div className={`absolute top-0 left-0 w-1.5 h-full ${isCompleted ? 'bg-emerald-400' : 'bg-fuchsia-500'}`} />
+        <div className={cn(
+            "group relative p-6 rounded-3xl border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col h-full backdrop-blur-sm",
+            styles[status.color],
+            task.completed && "opacity-75 grayscale-[0.8]"
+        )}>
+            {/* Header: Status Badge & Actions */}
+            <div className="flex justify-between items-start mb-4">
+                <div className={cn(
+                    "flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider shadow-sm",
+                    badgeStyles[status.color]
+                )}>
+                    {status.color === 'red' && <AlertCircle size={12} />}
+                    {status.color === 'orange' && <Clock size={12} />}
+                    {status.label}
+                </div>
 
-            {/* Badges Row (Top) */}
-            <div className="flex items-center gap-2 mb-3 pl-2">
-                {isCompleted && (
-                    <span className="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-lg font-bold uppercase tracking-wide">
-                        Completed
-                    </span>
-                )}
-                {isExpired && !isCompleted && (
-                    <span className="bg-red-100 text-red-700 text-xs px-2.5 py-1 rounded-lg font-bold uppercase tracking-wide">
-                        Overdue
-                    </span>
-                )}
-            </div>
-
-            <div className="flex-1 min-w-0 pl-2">
-                {/* Title Row with Checkbox */}
-                <div className="flex items-start gap-3 mb-2">
+                <div className="flex gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200 bg-white/50 dark:bg-black/20 p-1 rounded-xl backdrop-blur-sm shadow-sm">
                     <button
-                        onClick={() => onToggleComplete && onToggleComplete(task)}
-                        className={`
-                            flex-shrink-0 w-6 h-6 mt-1 rounded-md border-2 cursor-pointer transition-all duration-200 flex items-center justify-center
-                            ${isCompleted
-                                ? 'bg-emerald-500 border-emerald-500 text-white'
-                                : 'border-gray-300 hover:border-fuchsia-500 bg-white'
-                            }
-                        `}
+                        onClick={() => onEdit(task)}
+                        className="p-2 text-gray-500 hover:text-brand-600 hover:bg-white dark:hover:bg-white/10 rounded-lg transition-all"
+                        title="Edit"
                     >
-                        {isCompleted && <Check size={16} strokeWidth={3} />}
+                        <Edit2 size={16} />
                     </button>
-
-                    <h3
-                        onClick={() => onToggleComplete && onToggleComplete(task)}
-                        className={`font-bold text-lg truncate transition-all cursor-pointer flex-1 ${isCompleted ? 'text-gray-400 line-through decoration-2 decoration-gray-300' : 'text-gray-800'}`}
+                    <button
+                        onClick={() => onDelete(task.id)}
+                        className="p-2 text-gray-500 hover:text-red-500 hover:bg-white dark:hover:bg-white/10 rounded-lg transition-all"
+                        title="Delete"
                     >
-                        {task.title}
-                    </h3>
-                </div>
-
-                {/* Description */}
-                <p className={`text-sm leading-relaxed mb-4 line-clamp-3 ml-9 ${isCompleted ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {task.description}
-                </p>
-
-                {/* Deadline (Bottom) */}
-                <div className="flex items-center gap-3 ml-9">
-                    {task.deadline && (
-                        <div className={`
-                            text-xs font-semibold flex items-center gap-1.5
-                            ${isCompleted
-                                ? 'text-gray-400'
-                                : isExpired
-                                    ? 'text-red-500'
-                                    : 'text-gray-400'
-                            }
-                        `}>
-                            Deadline: {new Date(task.deadline).toLocaleDateString()} at {new Date(task.deadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                    )}
+                        <Trash2 size={16} />
+                    </button>
                 </div>
             </div>
 
-            {/* Absolute Edit/Delete Buttons */}
-            <div className="absolute top-4 right-4 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* Content */}
+            <div className="flex-1 mb-6">
+                <h3 className={cn(
+                    "text-xl font-bold mb-2 transition-colors",
+                    task.completed ? "text-gray-500 line-through decoration-2 decoration-gray-300" : "text-gray-900 dark:text-white"
+                )}>
+                    {task.title}
+                </h3>
+                {task.description && (
+                    <p className={cn(
+                        "text-sm leading-relaxed",
+                        task.completed ? "text-gray-400" : "text-gray-500 dark:text-gray-400"
+                    )}>
+                        {task.description}
+                    </p>
+                )}
+            </div>
+
+            {/* Footer: Date & Complete Toggle */}
+            <div className="flex items-center justify-between pt-4 border-t border-black/5 dark:border-white/5 mt-auto">
+                <div className="flex flex-col">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 dark:text-gray-500 tracking-wider mb-0.5">Deadline</span>
+                    <div className={cn(
+                        "flex items-center gap-2 text-sm font-semibold",
+                        status.color === 'red' ? "text-red-600 dark:text-red-400" : "text-gray-700 dark:text-gray-300"
+                    )}>
+                        <Calendar size={14} />
+                        <span>{task.deadline ? formatDate(task.deadline) : 'No Date'}</span>
+                    </div>
+                </div>
+
                 <button
-                    onClick={() => onEdit(task)}
-                    className="p-2 text-gray-400 hover:text-fuchsia-600 hover:bg-fuchsia-50 rounded-xl transition-colors"
-                    title="Edit"
+                    onClick={() => onToggleComplete(task)}
+                    className={cn(
+                        "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95",
+                        task.completed
+                            ? "bg-green-100 text-green-700 border border-green-200 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-900/50"
+                            : "bg-white text-gray-700 border border-gray-200 hover:bg-brand-600 hover:text-white hover:border-brand-600 hover:shadow-brand-500/25 dark:bg-white/5 dark:text-gray-300 dark:border-white/10 dark:hover:bg-brand-600"
+                    )}
                 >
-                    <Edit size={18} />
-                </button>
-                <button
-                    onClick={() => onDelete(task.id)}
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
-                    title="Delete"
-                >
-                    <Trash2 size={18} />
+                    {task.completed ? <CheckCircle size={16} /> : <Circle size={16} />}
+                    <span>{task.completed ? 'Done' : 'Complete'}</span>
                 </button>
             </div>
         </div>

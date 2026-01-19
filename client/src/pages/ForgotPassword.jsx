@@ -18,7 +18,7 @@ const ForgotPassword = () => {
             // Navigate to Reset Password page, passing email in state
             navigate('/reset-password', { state: { email } });
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to send OTP');
+            setError(err.response?.data?.message || err.response?.data?.error || 'Failed to send OTP');
         } finally {
             setLoading(false);
         }

@@ -18,23 +18,14 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const { validate } = require('deep-email-validator');
+
 
 // Signup
 router.post('/signup', async (req, res) => {
     const { email, password } = req.body;
     try {
-        // 1. Validate Email Existence (Deep Check)
-        const val = await validate(email);
-        if (!val.valid) {
-            // Map specific validation errors to user-friendly messages
-            let message = 'Invalid email address.';
-            if (val.reason === 'typo') message = `Did you mean ${val.validators.typo.source}?`;
-            else if (val.reason === 'smtp') message = 'This email address does not exist.';
-            else if (val.reason === 'mx') message = 'Invalid domain name in email.';
-
-            return res.status(400).json({ message });
-        }
+        // Removed deep-email-validator as it blocks legitimate institutional emails.
+        // OTP verification is sufficient proof of email validity.
 
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) return res.status(400).json({ message: 'User already exists' });
@@ -83,14 +74,16 @@ router.post('/signup', async (req, res) => {
             // CRITICAL: If email fails, delete the user so they can try again with a valid email
             await prisma.user.delete({ where: { id: user.id } });
 
-            // Ensure we return here so we don't send the success response below
-            return res.status(400).json({ message: 'Invalid email address or failed to send verification email. Please check and try again.' });
+            // Return detailed error for debugging (simplify for production later if needed)
+            return res.status(500).json({
+                message: 'Failed to send verification email. Please check server logs.',
+                error: emailError.message
+            });
         }
-        // Do NOT send res.status(201) here anymore, it's handled inside the try block now.
 
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
+        console.error("Signup Error:", error);
+        res.status(500).json({ message: 'Server error during signup', error: error.message });
     }
 });
 
@@ -196,7 +189,12 @@ router.post('/forgot-password', async (req, res) => {
             console.log('================================================');
             console.log(`FALLBACK OTP for ${email}: ${otp}`);
             console.log('================================================');
-            return res.status(500).json({ message: 'Failed to send email, please check server logs for OTP (Dev mode)' });
+
+            // Return detailed error to client for debugging
+            return res.status(500).json({
+                message: 'Failed to send OTP email',
+                error: emailError.message
+            });
         }
 
         res.json({ message: 'OTP sent to your email' });

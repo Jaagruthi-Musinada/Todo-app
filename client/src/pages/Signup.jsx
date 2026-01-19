@@ -18,7 +18,8 @@ const Signup = () => {
             await signup(email, password);
             setStep('verify');
         } catch (err) {
-            setError(err.response?.data?.message || 'Signup failed');
+            console.error("Signup error details:", err);
+            setError(err.response?.data?.message || err.response?.data?.error || 'Signup failed');
         }
     };
 
