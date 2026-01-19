@@ -42,7 +42,7 @@ const ForgotPassword = () => {
                         <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Email Address</label>
                         <input
                             type="email"
-                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium placeholder:text-gray-400"
+                            className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-fuchsia-500/10 focus:border-fuchsia-500 transition-all font-medium placeholder:text-gray-400 text-gray-900"
                             placeholder="you@example.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}

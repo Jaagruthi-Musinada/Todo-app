@@ -56,7 +56,7 @@ const Signup = () => {
                             <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Email</label>
                             <input
                                 type="email"
-                                className="w-full px-4 py-3 bg-fuchsia-50/30 border-gray-200 border rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 transition-all font-medium placeholder:text-gray-400"
+                                className="w-full px-4 py-3 bg-fuchsia-50/30 border-gray-200 border rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 transition-all font-medium placeholder:text-gray-400 text-gray-900"
                                 placeholder="you@example.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -67,7 +67,7 @@ const Signup = () => {
                             <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Password</label>
                             <input
                                 type="password"
-                                className="w-full px-4 py-3 bg-fuchsia-50/30 border-gray-200 border rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 transition-all font-medium placeholder:text-gray-400"
+                                className="w-full px-4 py-3 bg-fuchsia-50/30 border-gray-200 border rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 transition-all font-medium placeholder:text-gray-400 text-gray-900"
                                 placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -87,7 +87,7 @@ const Signup = () => {
                             <label className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">Verification Code</label>
                             <input
                                 type="text"
-                                className="w-full px-4 py-3 bg-fuchsia-50/30 border-gray-200 border rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 transition-all font-medium text-center tracking-widest text-lg"
+                                className="w-full px-4 py-3 bg-fuchsia-50/30 border-gray-200 border rounded-xl focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 transition-all font-medium text-center tracking-widest text-lg text-gray-900"
                                 placeholder="123456"
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value)}
